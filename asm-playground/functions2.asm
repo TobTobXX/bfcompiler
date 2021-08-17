@@ -1,10 +1,3 @@
-; ----------------------------------------------------------------------------------------
-; Writes "Hello, World" to the console using only system calls. Runs on 64-bit Linux only.
-; To assemble and run:
-;
-;     nasm -felf64 hello.asm && ld hello.o && ./a.out
-; ----------------------------------------------------------------------------------------
-
 	global		_start
 
 	section		.text
@@ -12,9 +5,7 @@ _start:
 	mov			rdi, 0x41			; pass argument
 	call		_otherfunc			; call the other function
 
-	leave							; release the stack frame
-	ret								; return to the previous instruction address
-
+	call		_exit				; Can't return from here: nowhere to return
 
 _otherfunc:
 	enter		0x1,0				; prepares a stack frame with 0x1 byte
@@ -24,13 +15,16 @@ _otherfunc:
 	mov			rsi, message            ; address of string to output
 	mov			rdx, 13                 ; number of bytes
 	syscall                             ; invoke operating system to do the write
-	mov			rax, 60                 ; system call for exit
-	xor			rdi, rdi                ; exit code 0
-	syscall                             ; invoke operating system to exit
 	; printing stuff ends here ----------------
 	leave							; release the stack frame
 	ret								; return to the previous instruction address
 
+; Exits the program
+_exit:
+	enter		0, 0				; prepares a stack frame with no room
+	mov			rax, 60				; system call for exit
+	mov			rdi, 0				; exit code 0
+	syscall							; call into linux
 
 
 	section	.data
