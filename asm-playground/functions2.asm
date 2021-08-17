@@ -9,16 +9,16 @@
 
 	section		.text
 _start:
-	mov			rdi, 0x41
-	call		_output
-	leave
-	ret
+	mov			rdi, 0x41			; pass argument
+	call		_otherfunc			; call the other function
+
+	leave							; release the stack frame
+	ret								; return to the previous instruction address
 
 
-_output:
-	; push		rbp
-	; mov			rbp+0x1,rsp
-	enter		0x1
+_otherfunc:
+	enter		0x1,0				; prepares a stack frame with 0x1 byte
+	; printing stuff starts here --------------
 	mov			rax, 1                  ; system call for write
 	mov			rdi, 1                  ; file handle 1 is stdout
 	mov			rsi, message            ; address of string to output
@@ -27,8 +27,9 @@ _output:
 	mov			rax, 60                 ; system call for exit
 	xor			rdi, rdi                ; exit code 0
 	syscall                             ; invoke operating system to exit
-	leave
-	ret
+	; printing stuff ends here ----------------
+	leave							; release the stack frame
+	ret								; return to the previous instruction address
 
 
 
