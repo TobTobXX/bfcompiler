@@ -15,5 +15,5 @@ run: make
 	./$(OF)
 
 clean: $(OF)
-	rm $(IF) $(OB) $(OF)
+	rm $(OB) $(OF)
 
