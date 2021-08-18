@@ -2,7 +2,7 @@
 
 AS=nasm
 ASMFLAGS=-f elf64
-IF=functions2.asm
+IF=io.asm
 OB=ir.o
 OF=a.out
 
