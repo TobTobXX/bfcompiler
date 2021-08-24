@@ -1,6 +1,7 @@
 use std::io::{self, BufReader};
 use std::io::prelude::*;
 use std::fs::{File, write};
+use std::process::Command as SysCommand;
 
 fn main() -> io::Result<()> {
     let f = File::open("fixture.bf")?;
@@ -45,8 +46,6 @@ fn main() -> io::Result<()> {
         })
         .collect();
 
-    println!("{}", asm);
-
     let asm = format!("
 	global		_start
 
@@ -85,7 +84,7 @@ _exit:
 	syscall
 
 _code: 
-    enter       512, 0
+    enter       8192, 0
     mov         r15, rbp
     sub         r15, 8
     {}
@@ -94,6 +93,16 @@ _code:
 ", asm);
 
     write("out.asm", asm)?;
+
+    SysCommand::new("nasm")
+            .args(&["-f elf64", "-o ir.o", "out.asm"])
+            .output()?;
+    SysCommand::new("ld")
+            .args(&["-oa.out", "ir.o"])
+            .output()?;
+    SysCommand::new("chmod")
+            .args(&["+x", "a.out"])
+            .output()?;
 
     Ok(())
 }
