@@ -36,7 +36,7 @@ _exit:
 	syscall
 
 _code: 
-    enter       512, 0
+    enter       8192, 0
     mov         r15, rbp
     sub         r15, 8
     opening_lbl0:
