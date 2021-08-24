@@ -8,6 +8,7 @@ _start:
 	sub			r15, 8
 
 	inc			DWORD [r15]
+	add			r15, 4
 
 	; mov			rax, [rbp-8]
 	; inc			rax
